@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Logo from '../../olx-logo.png';
 import './Login.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFirebase } from '../../store/FirebaseContext';
 
 function Login() {
+
+  const [input,setInput]=useState('')
+  const {logIn}=useFirebase()
+  const navigate=useNavigate()
+  const handleChange=(e)=>{
+    setInput(prev=>({...prev,[e.target.name]:e.target.value}))
+  }
+  const handleLogin=(e)=>{
+    e.preventDefault()
+    try{
+      logIn(input.email,input.password)
+      .then(()=>navigate('/'))
+      .catch(err=>alert(err.message))
+    }catch(err){
+      console.log(err)
+    }
+  }
   return (
     <div>
       <div className="loginParentDiv">
         <img width="200px" height="200px" src={Logo}></img>
-        <form>
+        <form onSubmit={(e)=>handleLogin(e)}>
           <label htmlFor="fname">Email</label>
           <br />
           <input
@@ -18,6 +36,8 @@ function Login() {
             id="fname"
             name="email"
             defaultValue="John"
+            value={input.email}
+            onChange={(e)=>handleChange(e)}
           />
           <br />
           <label htmlFor="lname">Password</label>
@@ -28,6 +48,8 @@ function Login() {
             id="lname"
             name="password"
             defaultValue="Doe"
+            value={input.password}
+            onChange={(e)=>handleChange(e)}
           />
           <br />
           <br />

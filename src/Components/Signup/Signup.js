@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {  useState } from "react";
 import Logo from "../../olx-logo.png";
 import "./Signup.css";
 import { useFirebase } from "../../store/FirebaseContext";
@@ -19,7 +19,6 @@ export default function Signup() {
     try{
        signUp(input.email,input.password)
        .then(async result=>{
-        // result.user.displayName=input.name
        await updateDisplayName(input.name)
        await addUser(result.user.uid,input.name,input.phone)
        navigate('/login')
